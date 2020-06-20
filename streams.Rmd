@@ -1,0 +1,213 @@
+---
+title: "streams"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE,message=FALSE,warning=FALSE,
+                      collapse = TRUE,
+                      comment = "#>"
+                      #fig.path = "images/fticr_markdown/"
+                      )
+
+library(tidyverse)
+library(lubridate)
+library(soilpalettes)
+```
+
+```{r}
+streams = read.csv("data/bbwm_stream_chemistry_1988_2019.csv") %>% 
+  dplyr::mutate(Date = ymd(Date)) %>% 
+  filter(Watershed %in% c("EB", "WB"))
+
+
+```
+
+### base cations
+
+```{r}
+streams %>% 
+  dplyr::select(Watershed, Date, Year,
+                Ca_ueq_L, Mg_ueq_L, Na_ueq_L, K_ueq_L) %>% 
+  pivot_longer(-c("Watershed", "Date", "Year"),
+               values_to = "ueq_L",
+               names_to = "ion") %>% 
+  
+  ggplot(aes(x = Date, ueq_L,
+             color = Watershed, shape = Watershed))+
+  geom_point()+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  facet_wrap(~ion, scales = "free_y")+
+  theme_bw()
+```
+
+### acid anions
+
+```{r, fig.height=3.5, fig.width=6}
+streams %>% 
+  dplyr::select(Watershed, Date, NO3_ueq_L, SO4_ueq_L) %>% 
+  pivot_longer(-c("Watershed", "Date"),
+               values_to = "ueq_L",
+               names_to = "ion") %>% 
+  ggplot(aes(x = Date, y = ueq_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  facet_wrap(~ion, scales = "free_y")+
+  theme_bw()+
+  theme(legend.position = "top")
+
+```
+
+
+### DOC  
+**check units and conversions**
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = DOC_mg_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = SUVA, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()+
+  labs(title = "specific UV absorbance of DOC",
+       subtitle = "higher SUVA = more aromatic, more terrestrial?")
+```
+
+### aluminum
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = Al_ppb, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = Al_org_ppb, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+### pH -- so many pHs!
+
+```{r}
+streams %>% 
+  dplyr::select(Watershed, Date, starts_with("pH")) %>% 
+  pivot_longer(-c("Watershed", "Date"),
+               values_to = "pH",
+               names_to = "type") %>% 
+  ggplot(aes(x = Date, y = pH, color = Watershed, shape=Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  facet_wrap(~type)+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = pH_air_eqll, y = pH_closed_cell, color = Watershed, shape = Watershed))+
+  geom_point(size=2)+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  labs(title="comparing pH types")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = H_ueq_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+### others
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = ANC_ueq_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = HCO3_ueq_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = sp_conductance_us_cm, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = total_P_ppb, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+```{r}
+streams %>% 
+  ggplot(aes(x = Date, y = Cl_ueq_L, color = Watershed, shape = Watershed))+
+  geom_point()+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  theme_bw()
+```
+
+---
+
+**Session Info**  
+Date run: `r Sys.Date()`  
+```{r}
+sessionInfo()
+```
+
+
+
