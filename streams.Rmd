@@ -1,6 +1,8 @@
 ---
 title: "streams"
-output: github_document
+output:
+  word_document: default
+  github_document: default
 ---
 
 ```{r setup, include=FALSE}
