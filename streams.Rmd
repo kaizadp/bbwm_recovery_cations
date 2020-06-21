@@ -4,6 +4,11 @@ output:
   github_document: default
 ---
 
+These are preliminary graphs of stream chemistry.  
+Additional figures, presented at the 2019 SFS conference, can be found [here](https://github.com/kaizadp/bbwm_recovery_cations/blob/master/sfs2019/sfs2019_graphs.md).
+
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE,message=FALSE,warning=FALSE,
                       collapse = TRUE,
@@ -20,9 +25,50 @@ library(soilpalettes)
 streams = read.csv("data/bbwm_stream_chemistry_1988_2019.csv") %>% 
   dplyr::mutate(Date = ymd(Date)) %>% 
   filter(Watershed %in% c("EB", "WB"))
-
-
 ```
+
+## all time series
+
+```{r timeseries, fig.width=15, fig.height=15}
+streams %>% 
+  dplyr::select(
+    Watershed, Date,
+    Ca_ueq_L, Mg_ueq_L, K_ueq_L, Na_ueq_L,
+    NO3_ueq_L, SO4_ueq_L,NH4_ueq_L, total_N_ppm,
+    DOC_mg_L, DIC_mg_L,
+    Al_ppb, Al_org_ppb,
+    Cl_ueq_L, Si_mg_L,
+    total_P_ppb, H_ueq_L,
+    ANC_ueq_L, HCO3_ueq_L,
+    sp_conductance_us_cm) %>% 
+  pivot_longer(-c("Watershed", "Date"),
+              names_to = "species") %>%
+  dplyr::mutate(species = factor(species, 
+                                 levels = 
+                                   c("Ca_ueq_L", "Mg_ueq_L", "K_ueq_L", "Na_ueq_L",
+    "NO3_ueq_L", "SO4_ueq_L","NH4_ueq_L", "total_N_ppm",
+    "DOC_mg_L", "DIC_mg_L",
+    "Al_ppb", "Al_org_ppb",
+    "Cl_ueq_L", "Si_mg_L",
+    "total_P_ppb", "H_ueq_L",
+    "ANC_ueq_L", "HCO3_ueq_L",
+    "sp_conductance_us_cm"))) %>% 
+  ggplot(aes(x = Date, y = value, color = Watershed, shape = Watershed))+
+  geom_point()+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+  
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  facet_wrap(~species, scales = "free_y", ncol = 4)+
+  labs(x = "")+
+  theme(legend.position = "top")+
+  theme_bw()+
+  NULL
+```
+
+
+---
+
+
 
 ### base cations
 

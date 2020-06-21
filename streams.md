@@ -1,6 +1,16 @@
 streams
 ================
 
+These are preliminary graphs of stream chemistry.  
+Additional figures, presented at the 2019 SFS conference, can be found
+[here](https://github.com/kaizadp/bbwm_recovery_cations/blob/master/sfs2019/sfs2019_graphs.md).
+
+## all time series
+
+![](streams_files/figure-gfm/timeseries-1.png)<!-- -->
+
+-----
+
 ### base cations
 
 ![](streams_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
