@@ -11,8 +11,6 @@ streams
 
 ### DOC
 
-**check units and conversions**
-
 ![](streams_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 ![](streams_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
@@ -46,7 +44,7 @@ streams
 -----
 
 **Session Info**  
-Date run: 2020-06-20
+Date run: 2020-06-21
 
     #> R version 3.6.0 (2019-04-26)
     #> Platform: x86_64-apple-darwin15.6.0 (64-bit)

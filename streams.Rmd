@@ -1,7 +1,6 @@
 ---
 title: "streams"
 output:
-  word_document: default
   github_document: default
 ---
 
@@ -66,7 +65,6 @@ streams %>%
 
 
 ### DOC  
-**check units and conversions**
 
 ```{r}
 streams %>% 
