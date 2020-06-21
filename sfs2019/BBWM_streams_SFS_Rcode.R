@@ -13,20 +13,13 @@ library(tidyverse)
 library(readxl)
 
 
-### OUTPUT
-write.csv(streams, "sfs2019/stream_annual.csv", row.names = F)
-write.csv(streams_conc, "sfs2019/stream_all.csv", row.names = F)
-
-
-# 1. annual values -- hysteresis plots ----
+# I. ANNUAL CONCENTRATIONS ------------------------------------------------
 ## import file ----
 data <- read_excel("sfs2019/BBWM_streams_SFS.xlsx",sheet = "Annual")
-names(data)
 
-# process 
+## process 
 streams = 
   data %>% 
-  # set levels for Watershed_group
   dplyr::mutate(
     # set levels for Watershed_group
     Watershed_group=factor(Watershed_group,
@@ -38,9 +31,11 @@ streams =
     Al_vol=Al/(H2O/Area),
     Al_ug_vol=Al_vol*27, 
     H_vol=H/(H2O/Area),
+    
     # ca+mg
     CaMg_vol = Ca_vol+Mg_vol,
     WY_label=as.factor(WY_label),
+    
     # set WY groups
     WY_group2 = case_when(
       WY <1990 ~ "1989",
@@ -50,6 +45,7 @@ streams =
       WY>2016 ~ "2017-18"),
     WY_group2=factor(WY_group2,
              levels=c("1989","1990-99","2000-09","2010-16","2017-18")),
+    
     WY_group = case_when(
       WY <1990 ~ "1989",
       (WY>1989 & WY <2000) ~ "1990-99",
@@ -59,22 +55,12 @@ streams =
                      levels=c("1989","1990-99","2000-09","2010-18"))
     )
 
-# attach(BBWM_streams_SFS)
-
 #
-
-## graphs ----
-## 1a. SLIDE 4
-## 1b. SLIDE 5. Al vs pH vol
-## 1c. CaMg vs. NO3SO4
-
-
-#
-## 2. all data points -- grouped by time period ----
-# import file -----
-
+# II. ALL STREAM CONCENTRATIONS -------------------------------------------
+## import file -----
 conc = read_excel("sfs2019/BBWM_streams_SFS.xlsx",sheet = "All_stream_samples")
 
+## process
 streams_conc = 
   conc %>% 
   rename(
@@ -83,11 +69,13 @@ streams_conc =
     H="H+ (ueq/L)",
     Al=`Al (ppb)`,
     Q="Discharge (L/sec)") %>%
+  
   dplyr::mutate(
     CaMg = Ca + Mg,
     H2 = H*H,
     H3 = H2*H
     ) %>%
+  
   dplyr::mutate(
     #creating new categorical variable -- pretreatment, 2 5-yr periods, recovery
     WY_group = case_when(
@@ -106,28 +94,20 @@ streams_conc =
       WY>2016 ~ "2017-18"),
     WY_group2=factor(WY_group2,levels=c("1989","1990-99","2000-09","2010-16","2017-18"))
     ) %>% 
+  
   filter(Watershed %in% c("EB","WB"))
     
 #
 
-# graphs ----
-## 2a. SLIDE 6. Ca vs Q
-#
-## 2a. SLIDE 6. Ca vs Q-log --- not using this
+
+# III. OUTPUT -------------------------------------------------------------
+write.csv(streams, "sfs2019/stream_annual_PROCESSED.csv", row.names = F)
+write.csv(streams_conc, "sfs2019/stream_all_PROCESSED.csv", row.names = F)
 
 #
-## 2b. SLIDE 7. Mg vs Q
 
-
-##
-## 2c. Ca+Mg vs H2 GROUP 1 (don't use)
-
-
-## 2d. SLIDE 8. CaMg vs H2 GROUP 2
-
-
-## 2e. SLIDE 9. Al vs. H3 GROUP 2
-
+############
+############
 #
 #### OLD GRAPHS ----
 ##

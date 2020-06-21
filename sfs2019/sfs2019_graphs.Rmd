@@ -17,7 +17,7 @@ library(ggrepel)
 library(cowplot)
 library(scales)
 
-streams = read.csv("stream_annual.csv", stringsAsFactors = F) %>% 
+streams = read.csv("stream_annual_PROCESSED.csv", stringsAsFactors = F) %>% 
    dplyr::mutate(
     # set levels for Watershed_group
     Watershed_group=factor(Watershed_group,
@@ -26,7 +26,7 @@ streams = read.csv("stream_annual.csv", stringsAsFactors = F) %>%
                                                  "WB (treatment)",
                                                  "WB (recovery)")))
 
-streams_conc = read.csv("stream_all.csv", stringsAsFactors = F)
+streams_conc = read.csv("stream_all_PROCESSED.csv", stringsAsFactors = F)
 ```
 
 ```{r ggplot_setup}
