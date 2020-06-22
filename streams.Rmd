@@ -186,7 +186,7 @@ streams %>%
 
 ---
 
-### DOC-SUVA (specific UV ansorbance)  
+### DOC-SUVA (specific UV absorbance)  
 
 ```{r DOC, eval=FALSE}
 streams %>% 

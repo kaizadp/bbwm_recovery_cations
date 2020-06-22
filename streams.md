@@ -29,7 +29,7 @@ Additional figures, presented at the 2019 SFS conference, can be found
 
 -----
 
-### DOC-SUVA (specific UV ansorbance)
+### DOC-SUVA (specific UV absorbance)
 
 ![](streams_files/figure-gfm/SUVA-1.png)<!-- -->
 
