@@ -11,37 +11,41 @@ Additional figures, presented at the 2019 SFS conference, can be found
 
 -----
 
+### ANNUAL EXPORT
+
+![](streams_files/figure-gfm/exports-1.png)<!-- -->
+
 ### base cations
 
-![](streams_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
-
-### acid anions
+![](streams_files/figure-gfm/cation_dumbell-1.png)<!-- -->
 
 ![](streams_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-### DOC
+### acid anions
 
 ![](streams_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
-![](streams_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+### DOC
 
-### aluminum
+![](streams_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 ![](streams_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
+### aluminum
+
 ![](streams_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
-### pH – so many pHs\!
-
 ![](streams_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+### pH – so many pHs\!
 
 ![](streams_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
 
 ![](streams_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-### others
-
 ![](streams_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+### others
 
 ![](streams_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
@@ -50,6 +54,8 @@ Additional figures, presented at the 2019 SFS conference, can be found
 ![](streams_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
 
 ![](streams_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+
+![](streams_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
 
 -----
 

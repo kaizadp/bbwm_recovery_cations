@@ -60,17 +60,68 @@ streams %>%
   scale_shape_manual(values = c(1,16))+
   facet_wrap(~species, scales = "free_y", ncol = 4)+
   labs(x = "")+
-  theme(legend.position = "top")+
   theme_bw()+
+  theme(legend.position = "top")+
   NULL
 ```
 
 
 ---
 
+### ANNUAL EXPORT
+
+```{r}
+streams_annual = read.csv("data/annual_outflux.csv", stringsAsFactors = F)
+```
+
+```{r exports, fig.width=15, fig.height=10}
+(exports = 
+  streams_annual %>%
+  dplyr::select(-Area, -H2O) %>% 
+  pivot_longer(-c("Watershed", "WY"),
+              names_to = "species") %>% 
+   filter(!is.na(species)) %>% 
+  dplyr::mutate(species = factor(species, levels = c("Ca", "Mg", "Na", "K",
+                                                     "SO4", "NO3", "NH4",
+                                                     "DOC", "Al", "H","Cl","Si",
+                                                     "ANC", "HCO3","Discharge.L.s","EQPH"))) %>% 
+  ggplot(aes(x = WY, y = value, color = Watershed, shape = Watershed))+
+  geom_point()+
+  geom_vline(xintercept = 2016.5, linetype = "dashed")+  
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  facet_wrap(~species, scales = "free_y", ncol = 4)+
+  labs(x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  NULL
+)
+```
+
+
 
 
 ### base cations
+
+```{r cation_dumbell}
+streams %>% 
+  dplyr::select(Watershed, Date, Year,
+                Ca_ueq_L, Mg_ueq_L, Na_ueq_L, K_ueq_L) %>% 
+  pivot_longer(-c("Watershed", "Date", "Year"),
+               values_to = "ueq_L",
+               names_to = "ion") %>%
+  #na.omit() %>% 
+  ggplot(aes(x = Date, ueq_L,
+             color = Watershed, shape = Watershed))+
+  geom_point()+
+  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  facet_wrap(~ion, scales = "free_y")+
+  theme_bw()
+```
+
+
 
 ```{r}
 streams %>% 
