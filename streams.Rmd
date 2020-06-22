@@ -27,9 +27,126 @@ library(ggalt)
 streams = read.csv("data/bbwm_stream_chemistry_1988_2019.csv") %>% 
   dplyr::mutate(Date = ymd(Date)) %>% 
   filter(Watershed %in% c("EB", "WB"))
+
+streams_annual = read.csv("data/annual_outflux.csv", stringsAsFactors = F)
+
 ```
 
-## all time series
+---
+
+### ANNUAL EXPORTS
+
+```{r}
+streams_annual = read.csv("data/annual_outflux.csv", stringsAsFactors = F)
+```
+
+```{r exports, fig.width=15, fig.height=12}
+export_long = 
+  streams_annual %>%
+  dplyr::select(-Area, -H2O) %>% 
+  pivot_longer(-c("Watershed", "WY"),
+              names_to = "species") %>% 
+   filter(!is.na(species)) %>% 
+  dplyr::mutate(species = factor(species, levels = c("Ca", "Mg", "Na", "K",
+                                                     "SO4", "NO3", "NH4",
+                                                     "DOC", "Al", "H","Cl","Si",
+                                                     "ANC", "HCO3","Discharge.L.s","EQPH")))
+
+export_long %>% 
+  ggplot(aes(x = WY, y = value, color = Watershed, shape = Watershed))+
+  geom_path()+
+  geom_point(size=2, stroke=1)+
+  geom_vline(xintercept = 2016.5, linetype = "dashed")+  
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  facet_wrap(~species, scales = "free_y", ncol = 4)+
+  labs(
+       subtitle = "units eq/ha/yr or mol/ha/yr, discharge = 10^6 L/yr",
+       x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  NULL
+```
+
+#### annual exports -- difference plots
+
+```{r export_diff, fig.width=15, fig.height=12}
+export_long %>% 
+  spread(Watershed, value) %>% 
+  dplyr::mutate(diff = WB-EB) %>% 
+  ggplot(aes(x = WY, y = diff))+
+  geom_path(color = "grey")+
+  geom_point(size=2, stroke=1)+
+  geom_vline(xintercept = 2016.5, linetype = "dashed")+  
+  facet_wrap(~species, scales = "free_y", ncol = 4)+
+  labs(title = "difference, WB-EB",
+       subtitle = "units eq/ha/yr or mol/ha/yr, discharge = 10^6 L/yr",
+       x = "")+
+  theme_bw()+
+  theme(legend.position = "top")+
+  NULL
+
+```
+
+```{r dumbbell, eval=FALSE, fig.width=15, fig.height=12}
+
+export_long %>% 
+  spread(Watershed, value) %>% 
+  ggplot(aes(x = EB, xend = WB, y = WY))+
+  geom_dumbbell(color = "grey90", 
+                colour_x = "black", colour_xend = "darkblue",
+                size=1.5)+
+  coord_flip()+
+  facet_wrap(~species, scales = "free_y", ncol = 4)+
+  theme_bw()+
+  theme(legend.position = "top")+
+  NULL
+```
+
+---
+
+### MEAN ANNUAL CONCENTRATIONS -- VOLUME WEIGHTED
+
+```{r annual_mean, fig.width=15, fig.height=12}
+streams_annual %>% 
+  dplyr::mutate(
+    Ca_vol=Ca/(H2O/Area),
+    Mg_vol=Mg/(H2O/Area),
+    Na_vol=Na/(H2O/Area),
+    K_vol=K/(H2O/Area),
+    SO4_vol=SO4/(H2O/Area),
+    NO3_vol=NO3/(H2O/Area),
+    NH4_vol=NH4/(H2O/Area),
+    Al_vol=Al/(H2O/Area),
+    H_vol=H/(H2O/Area),
+    DOC_vol=DOC/(H2O/Area),
+    HCO3_vol=HCO3/(H2O/Area),
+    ANC_vol=ANC/(H2O/Area)
+  ) %>% 
+  dplyr::select(Watershed, WY, ends_with("_vol")) %>% 
+  pivot_longer(-c("Watershed","WY"),
+               names_to = "species") %>% 
+  dplyr::mutate(species = factor(species, levels = c(
+    "Ca_vol", "Mg_vol", "K_vol", "Na_vol", "SO4_vol", "NO3_vol", "NH4_vol",
+    "DOC_vol", "Al_vol", "H_vol", "ANC_vol", "HCO3_vol"
+  ))) %>% 
+   
+  ggplot(aes(x = WY, y = value, color = Watershed, shape=Watershed))+
+  geom_path()+
+  geom_point(size=2, stroke=1)+
+  scale_color_manual(values = c("grey70", "darkred"))+
+  scale_shape_manual(values = c(1,16))+
+  geom_vline(xintercept = 2016.5, linetype = "dashed")+
+  labs(title = "volume-weighted annual means",
+       subtitle = "ueq/L or umol/L")+
+  facet_wrap(~species, scales = "free_y")+
+  theme_bw()+
+  theme(legend.position = "top")
+```
+
+---
+
+## TIME-SERIES STREAM CONCENTRATIONS (all data)
 
 ```{r timeseries, fig.width=15, fig.height=15}
 streams %>% 
@@ -67,125 +184,11 @@ streams %>%
   NULL
 ```
 
-
 ---
 
-### ANNUAL EXPORT
+### DOC-SUVA (specific UV ansorbance)  
 
-```{r}
-streams_annual = read.csv("data/annual_outflux.csv", stringsAsFactors = F)
-```
-
-```{r exports, fig.width=15, fig.height=12}
-export_long = 
-  streams_annual %>%
-  dplyr::select(-Area, -H2O) %>% 
-  pivot_longer(-c("Watershed", "WY"),
-              names_to = "species") %>% 
-   filter(!is.na(species)) %>% 
-  dplyr::mutate(species = factor(species, levels = c("Ca", "Mg", "Na", "K",
-                                                     "SO4", "NO3", "NH4",
-                                                     "DOC", "Al", "H","Cl","Si",
-                                                     "ANC", "HCO3","Discharge.L.s","EQPH")))
-
-export_long %>% 
-  ggplot(aes(x = WY, y = value, color = Watershed, shape = Watershed))+
-  geom_path()+
-  geom_point(size=2, stroke=1)+
-  geom_vline(xintercept = 2016.5, linetype = "dashed")+  
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  facet_wrap(~species, scales = "free_y", ncol = 4)+
-  labs(x = "")+
-  theme_bw()+
-  theme(legend.position = "top")+
-  NULL
-```
-
-#### annual exports -- difference plots
-
-```{r export_diff, fig.width=15, fig.height=12}
-export_long %>% 
-  spread(Watershed, value) %>% 
-  dplyr::mutate(diff = WB-EB) %>% 
-  ggplot(aes(x = WY, y = diff))+
-  geom_path(color = "grey")+
-  geom_point(size=2, stroke=1)+
-  geom_vline(xintercept = 2016.5, linetype = "dashed")+  
-  facet_wrap(~species, scales = "free_y", ncol = 4)+
-  labs(title = "difference, WB-EB",
-       subtitle = "units eq/ha/yr or mol/ha/yr, discharge = 10^6 L/yr",
-       x = "")+
-  theme_bw()+
-  theme(legend.position = "top")+
-  NULL
-
-```
-
-#### annual exports -- dumbbell plots
-
-
-```{r, fig.width=15, fig.height=12}
-
-export_long %>% 
-  spread(Watershed, value) %>% 
-  ggplot(aes(x = EB, xend = WB, y = WY))+
-  geom_dumbbell(color = "grey90", 
-                colour_x = "black", colour_xend = "darkblue",
-                size=1.5)+
-  coord_flip()+
-  facet_wrap(~species, scales = "free_y", ncol = 4)+
-  theme_bw()+
-  theme(legend.position = "top")+
-  NULL
-```
-
----
-
-### base cations
-
-
-```{r}
-streams %>% 
-  dplyr::select(Watershed, Date, Year,
-                Ca_ueq_L, Mg_ueq_L, Na_ueq_L, K_ueq_L) %>% 
-  pivot_longer(-c("Watershed", "Date", "Year"),
-               values_to = "ueq_L",
-               names_to = "ion") %>% 
-  
-  ggplot(aes(x = Date, ueq_L,
-             color = Watershed, shape = Watershed))+
-  geom_point()+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  facet_wrap(~ion, scales = "free_y")+
-  theme_bw()
-```
-
-### acid anions
-
-```{r, fig.height=3.5, fig.width=6}
-streams %>% 
-  dplyr::select(Watershed, Date, NO3_ueq_L, SO4_ueq_L) %>% 
-  pivot_longer(-c("Watershed", "Date"),
-               values_to = "ueq_L",
-               names_to = "ion") %>% 
-  ggplot(aes(x = Date, y = ueq_L, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  facet_wrap(~ion, scales = "free_y")+
-  theme_bw()+
-  theme(legend.position = "top")
-
-```
-
-
-### DOC  
-
-```{r}
+```{r DOC, eval=FALSE}
 streams %>% 
   ggplot(aes(x = Date, y = DOC_mg_L, color = Watershed, shape = Watershed))+
   geom_point()+
@@ -196,7 +199,7 @@ streams %>%
 
 ```
 
-```{r}
+```{r SUVA}
 streams %>% 
   ggplot(aes(x = Date, y = SUVA, color = Watershed, shape = Watershed))+
   geom_point()+
@@ -208,31 +211,9 @@ streams %>%
        subtitle = "higher SUVA = more aromatic, more terrestrial?")
 ```
 
-### aluminum
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = Al_ppb, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = Al_org_ppb, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
 ### pH -- so many pHs!
 
-```{r}
+```{r pHs}
 streams %>% 
   dplyr::select(Watershed, Date, starts_with("pH")) %>% 
   pivot_longer(-c("Watershed", "Date"),
@@ -248,7 +229,7 @@ streams %>%
   theme_bw()
 ```
 
-```{r}
+```{r pH_regression}
 streams %>% 
   ggplot(aes(x = pH_air_eqll, y = pH_closed_cell, color = Watershed, shape = Watershed))+
   geom_point(size=2)+
@@ -258,61 +239,9 @@ streams %>%
   theme_bw()
 ```
 
-```{r}
+```{r H}
 streams %>% 
   ggplot(aes(x = Date, y = H_ueq_L, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-### others
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = ANC_ueq_L, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = HCO3_ueq_L, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = sp_conductance_us_cm, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = total_P_ppb, color = Watershed, shape = Watershed))+
-  geom_point()+
-  scale_color_manual(values = c("grey70", "darkred"))+
-  scale_shape_manual(values = c(1,16))+
-  geom_vline(xintercept = as.Date("2016-10-31"), linetype = "dashed")+
-  theme_bw()
-```
-
-```{r}
-streams %>% 
-  ggplot(aes(x = Date, y = Cl_ueq_L, color = Watershed, shape = Watershed))+
   geom_point()+
   scale_color_manual(values = c("grey70", "darkred"))+
   scale_shape_manual(values = c(1,16))+
@@ -324,7 +253,7 @@ streams %>%
 
 **Session Info**  
 Date run: `r Sys.Date()`  
-```{r}
+```{r session}
 sessionInfo()
 ```
 

@@ -5,13 +5,9 @@ These are preliminary graphs of stream chemistry.
 Additional figures, presented at the 2019 SFS conference, can be found
 [here](https://github.com/kaizadp/bbwm_recovery_cations/blob/master/sfs2019/sfs2019_graphs.md).
 
-## all time series
-
-![](streams_files/figure-gfm/timeseries-1.png)<!-- -->
-
 -----
 
-### ANNUAL EXPORT
+### ANNUAL EXPORTS
 
 ![](streams_files/figure-gfm/exports-1.png)<!-- -->
 
@@ -19,51 +15,31 @@ Additional figures, presented at the 2019 SFS conference, can be found
 
 ![](streams_files/figure-gfm/export_diff-1.png)<!-- -->
 
-#### annual exports – dumbbell plots
+-----
 
-![](streams_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+### MEAN ANNUAL CONCENTRATIONS – VOLUME WEIGHTED
+
+![](streams_files/figure-gfm/annual_mean-1.png)<!-- -->
 
 -----
 
-### base cations
+## TIME-SERIES STREAM CONCENTRATIONS (all data)
 
-![](streams_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](streams_files/figure-gfm/timeseries-1.png)<!-- -->
 
-### acid anions
+-----
 
-![](streams_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+### DOC-SUVA (specific UV ansorbance)
 
-### DOC
-
-![](streams_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
-
-### aluminum
-
-![](streams_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](streams_files/figure-gfm/SUVA-1.png)<!-- -->
 
 ### pH – so many pHs\!
 
-![](streams_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](streams_files/figure-gfm/pHs-1.png)<!-- -->
 
-![](streams_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](streams_files/figure-gfm/pH_regression-1.png)<!-- -->
 
-![](streams_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
-
-### others
-
-![](streams_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
-
-![](streams_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
+![](streams_files/figure-gfm/H-1.png)<!-- -->
 
 -----
 
