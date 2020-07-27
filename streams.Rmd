@@ -259,3 +259,63 @@ sessionInfo()
 
 
 
+
+
+### jul-27
+
+```{r}
+ions_annual = 
+  
+streams_annual %>% 
+  dplyr::mutate(
+    Ca_vol=Ca/(H2O/Area),
+    Mg_vol=Mg/(H2O/Area),
+    Na_vol=Na/(H2O/Area),
+    K_vol=K/(H2O/Area),
+    SO4_vol=SO4/(H2O/Area),
+    NO3_vol=NO3/(H2O/Area),
+    NH4_vol=NH4/(H2O/Area),
+    Al_vol=Al/(H2O/Area),
+    H_vol=H/(H2O/Area),
+    DOC_vol=DOC/(H2O/Area),
+    HCO3_vol=HCO3/(H2O/Area),
+    ANC_vol=ANC/(H2O/Area)
+  ) %>% 
+  dplyr::select(Watershed, WY, ends_with("_vol")) %>% 
+  pivot_longer(-c("Watershed","WY"),
+               names_to = "species") %>% 
+  dplyr::mutate(species = factor(species, levels = c(
+    "Ca_vol", "Mg_vol", "K_vol", "Na_vol", "SO4_vol", "NO3_vol", "NH4_vol",
+    "DOC_vol", "Al_vol", "H_vol", "ANC_vol", "HCO3_vol"
+  )))
+```
+
+```{r}
+cations_annual = 
+  ions_annual %>% 
+  filter(species %in% c("Ca_vol", "Mg_vol", "K_vol", "Na_vol",
+                        "Al_vol", "H_vol"))
+
+cations_annual %>% 
+  ggplot()+
+  geom_bar(aes(x = WY, y = value, fill = species), stat = "identity")+
+  scale_fill_viridis_d()+
+  facet_grid(.~Watershed)+
+  labs(y = "ueq/L")+
+  theme_bw()
+```
+
+```{r}
+anions_annual = 
+  ions_annual %>% 
+  filter(species %in% c("NO3_vol", "SO4_vol"))
+
+anions_annual %>% 
+  ggplot()+
+  geom_bar(aes(x = WY, y = value, fill = species), stat = "identity")+
+  scale_fill_viridis_d()+
+  facet_grid(.~Watershed)+
+  labs(y = "ueq/L")+
+  theme_bw()
+```
+
