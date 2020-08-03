@@ -265,8 +265,7 @@ sessionInfo()
 
 ```{r}
 ions_annual = 
-  
-streams_annual %>% 
+  streams_annual %>% 
   dplyr::mutate(
     Ca_vol=Ca/(H2O/Area),
     Mg_vol=Mg/(H2O/Area),
@@ -317,5 +316,17 @@ anions_annual %>%
   facet_grid(.~Watershed)+
   labs(y = "ueq/L")+
   theme_bw()
+```
+
+```{r}
+cations_annual %>% 
+  ggplot(aes(x = WY, y = value, color = species))+
+  geom_point()+geom_path()+
+  facet_grid(.~Watershed)+
+  theme_bw()+
+  NULL
+
+
+
 ```
 
